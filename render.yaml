@@ -2,7 +2,7 @@ services:
   - type: web
     name: scholarspend-ai
     runtime: python
-    buildCommand: poetry install
+    buildCommand: poetry install --no-root
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     rootDir: backend
     envVars:
