@@ -267,3 +267,69 @@ class SurvivalForecastResponse(BaseModel):
     # Metadata
     forecast_generated_at: datetime = Field(default_factory=datetime.utcnow)
     data_window_days: int = Field(30, description="Days of history used for forecast")
+
+
+# ═══════════════════════════════════════════════════════════════
+# ANALYTICS SUMMARY SCHEMAS
+# ═══════════════════════════════════════════════════════════════
+
+
+class BalanceTrendPoint(BaseModel):
+    """One day's debit total for the 7-day balance trend."""
+
+    date: str = Field(..., description="ISO date string, e.g. '2026-04-13'")
+    total: float
+
+
+class AnalyticsSummaryResponse(BaseModel):
+    """Response from GET /analytics/summary."""
+
+    user_id: int
+    total_spent_current_month: float
+    category_breakdown: dict[str, float] = Field(
+        ...,
+        description="Category name → total spent; only categories with spend > 0",
+    )
+    balance_trend: List[BalanceTrendPoint] = Field(
+        ...,
+        description="Daily debit totals for the last 7 days (oldest first)",
+    )
+
+
+# ═══════════════════════════════════════════════════════════════
+# DUES SCHEMAS
+# ═══════════════════════════════════════════════════════════════
+
+
+class DueCreate(BaseModel):
+    """Payload to record a new due (debt or credit)."""
+
+    amount: float = Field(..., gt=0)
+    description: Optional[str] = Field(None, max_length=500)
+    person_name: str = Field(..., max_length=150)
+    due_date: Optional[datetime] = None
+    is_owed_to_me: bool = Field(
+        False,
+        description="True = someone owes ME; False = I owe someone",
+    )
+
+
+class DueUpdate(BaseModel):
+    """Partial update — only `is_paid` is exposed for PATCH /dues/{id}/pay."""
+
+    is_paid: bool = True
+
+
+class DueResponse(OrmBase):
+    """Due record returned from the API."""
+
+    id: int
+    user_id: int
+    amount: float
+    description: Optional[str]
+    person_name: str
+    due_date: Optional[datetime]
+    is_owed_to_me: bool
+    is_paid: bool
+    created_at: datetime
+    updated_at: datetime

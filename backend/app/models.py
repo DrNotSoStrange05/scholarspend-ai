@@ -1,7 +1,7 @@
 """
 ScholarSpend AI — SQLAlchemy ORM Models
 Database: PostgreSQL
-Tables:  users, transactions, subscriptions
+Tables:  users, transactions, subscriptions, dues
 """
 
 import enum
@@ -93,6 +93,9 @@ class User(Base):
     )
     subscriptions = relationship(
         "Subscription", back_populates="user", cascade="all, delete-orphan"
+    )
+    dues = relationship(
+        "Dues", back_populates="user", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:
@@ -209,3 +212,41 @@ class Subscription(Base):
             f"<Subscription id={self.id} name={self.name!r} "
             f"amount={self.amount} cycle={self.billing_cycle.value!r}>"
         )
+
+
+# ─────────────────────────────────────────────
+# Dues
+# ─────────────────────────────────────────────
+class Dues(Base):
+    """
+    Tracks informal debts between the student and others.
+    is_owed_to_me=True  → someone owes ME money (green / credit side)
+    is_owed_to_me=False → I owe someone money  (red / debit side)
+    """
+
+    __tablename__ = "dues"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+
+    amount = Column(Float, nullable=False)
+    description = Column(String(500), nullable=True)     # What the money is for
+    person_name = Column(String(150), nullable=False)    # Creditor / debtor name
+
+    due_date = Column(DateTime(timezone=True), nullable=True)   # Optional repayment deadline
+
+    is_owed_to_me = Column(Boolean, nullable=False, default=False)
+    is_paid = Column(Boolean, nullable=False, default=False)
+
+    # Timestamps
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+    # Relationships
+    user = relationship("User", back_populates="dues")
+
+    def __repr__(self) -> str:
+        direction = "owed_to_me" if self.is_owed_to_me else "i_owe"
+        return f"<Dues id={self.id} {direction} amount={self.amount} person={self.person_name!r}>"

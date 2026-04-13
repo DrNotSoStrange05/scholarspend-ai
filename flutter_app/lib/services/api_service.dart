@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import '../models/analytics_summary.dart';
+import '../models/due.dart';
 import '../models/forecast.dart';
 import '../models/transaction.dart';
 
@@ -37,6 +39,14 @@ class ApiService {
     await _dio.post('/transactions/sync', data: body);
   }
 
+  Future<void> createTransaction(int userId, Map<String, dynamic> payload) async {
+    await _dio.post(
+      '/transactions/',
+      queryParameters: {'user_id': userId},
+      data: payload,
+    );
+  }
+
   // ── Analytics ─────────────────────────────────────────────────
   Future<SurvivalForecast> fetchSurvivalForecast(int userId) async {
     final response = await _dio.get(
@@ -44,5 +54,37 @@ class ApiService {
       queryParameters: {'user_id': userId},
     );
     return SurvivalForecast.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<AnalyticsSummary> fetchAnalyticsSummary(int userId) async {
+    final response = await _dio.get(
+      '/analytics/summary',
+      queryParameters: {'user_id': userId},
+    );
+    return AnalyticsSummary.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  // ── Dues ──────────────────────────────────────────────────────
+  Future<List<Due>> fetchDues(int userId, {bool includePaid = false}) async {
+    final response = await _dio.get(
+      '/dues/',
+      queryParameters: {'user_id': userId, 'include_paid': includePaid},
+    );
+    final list = response.data as List<dynamic>;
+    return list.map((e) => Due.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<Due> createDue(int userId, Map<String, dynamic> payload) async {
+    final response = await _dio.post(
+      '/dues/',
+      queryParameters: {'user_id': userId},
+      data: payload,
+    );
+    return Due.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<Due> markDuePaid(int dueId) async {
+    final response = await _dio.patch('/dues/$dueId/pay');
+    return Due.fromJson(response.data as Map<String, dynamic>);
   }
 }

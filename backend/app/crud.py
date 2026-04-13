@@ -241,3 +241,110 @@ async def update_subscription(
 async def delete_subscription(db: AsyncSession, sub: models.Subscription) -> None:
     await db.delete(sub)
     await db.commit()
+
+
+# ═══════════════════════════════════════════════════════════════
+# ANALYTICS SUMMARY HELPERS
+# ═══════════════════════════════════════════════════════════════
+
+
+async def get_monthly_total(db: AsyncSession, user_id: int) -> float:
+    """Sum of all DEBIT transactions in the current calendar month."""
+    now = datetime.utcnow()
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    result = await db.execute(
+        select(func.coalesce(func.sum(models.Transaction.amount), 0.0))
+        .where(
+            models.Transaction.user_id == user_id,
+            models.Transaction.transaction_type == models.TransactionType.DEBIT,
+            models.Transaction.transacted_at >= month_start,
+        )
+    )
+    return float(result.scalar_one())
+
+
+async def get_balance_trend_7days(db: AsyncSession, user_id: int) -> list[dict]:
+    """Daily debit totals for the last 7 days (oldest → newest)."""
+    since = datetime.utcnow() - timedelta(days=7)
+    result = await db.execute(
+        select(
+            func.date(models.Transaction.transacted_at).label("day"),
+            func.sum(models.Transaction.amount).label("total"),
+        )
+        .where(
+            models.Transaction.user_id == user_id,
+            models.Transaction.transaction_type == models.TransactionType.DEBIT,
+            models.Transaction.transacted_at >= since,
+        )
+        .group_by(func.date(models.Transaction.transacted_at))
+        .order_by(func.date(models.Transaction.transacted_at))
+    )
+    return [{"date": str(row.day), "total": float(row.total)} for row in result]
+
+
+async def get_category_breakdown_current_month(
+    db: AsyncSession, user_id: int
+) -> dict[str, float]:
+    """Category → total spent for the current calendar month."""
+    now = datetime.utcnow()
+    month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    result = await db.execute(
+        select(
+            models.Transaction.category,
+            func.sum(models.Transaction.amount).label("total"),
+        )
+        .where(
+            models.Transaction.user_id == user_id,
+            models.Transaction.transaction_type == models.TransactionType.DEBIT,
+            models.Transaction.transacted_at >= month_start,
+        )
+        .group_by(models.Transaction.category)
+    )
+    return {str(row.category.value): float(row.total) for row in result}
+
+
+# ═══════════════════════════════════════════════════════════════
+# DUES CRUD
+# ═══════════════════════════════════════════════════════════════
+
+
+async def get_dues(
+    db: AsyncSession,
+    user_id: int,
+    include_paid: bool = False,
+) -> list[models.Dues]:
+    stmt = select(models.Dues).where(models.Dues.user_id == user_id)
+    if not include_paid:
+        stmt = stmt.where(models.Dues.is_paid == False)  # noqa: E712
+    stmt = stmt.order_by(models.Dues.created_at.desc())
+    result = await db.execute(stmt)
+    return list(result.scalars().all())
+
+
+async def get_due(db: AsyncSession, due_id: int) -> Optional[models.Dues]:
+    result = await db.execute(select(models.Dues).where(models.Dues.id == due_id))
+    return result.scalar_one_or_none()
+
+
+async def create_due(
+    db: AsyncSession, user_id: int, payload: schemas.DueCreate
+) -> models.Dues:
+    due = models.Dues(
+        user_id=user_id,
+        amount=payload.amount,
+        description=payload.description,
+        person_name=payload.person_name,
+        due_date=payload.due_date,
+        is_owed_to_me=payload.is_owed_to_me,
+    )
+    db.add(due)
+    await db.commit()
+    await db.refresh(due)
+    return due
+
+
+async def mark_due_paid(db: AsyncSession, due: models.Dues) -> models.Dues:
+    due.is_paid = True
+    await db.commit()
+    await db.refresh(due)
+    return due
