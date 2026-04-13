@@ -5,10 +5,13 @@ import 'providers/transaction_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/analytics_provider.dart';
 import 'providers/dues_provider.dart';
+import 'providers/auth_provider.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/ledger_screen.dart';
 import 'screens/analytics_screen.dart';
 import 'screens/dues_manager_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/add_transaction_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -28,6 +31,7 @@ class _ScholarSpendAppState extends State<ScholarSpendApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => ThemeService()),
         ChangeNotifierProvider(create: (_) => AnalyticsProvider()),
@@ -40,12 +44,26 @@ class _ScholarSpendAppState extends State<ScholarSpendApp> {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.darkTheme,
             themeMode: ThemeMode.dark,
-            initialRoute: '/',
+            home: Consumer<AuthProvider>(
+              builder: (context, authProvider, _) {
+                // Show login if not authenticated
+                if (!authProvider.isLoggedIn) {
+                  return const LoginScreen();
+                }
+                // Show dashboard if authenticated
+                return const DashboardScreen();
+              },
+            ),
             routes: {
-              '/': (_) => const DashboardScreen(),
+              '/dashboard': (_) => const DashboardScreen(),
               '/ledger': (_) => const LedgerScreen(),
               '/analytics': (_) => const AnalyticsScreen(),
-              '/dues': (_) => const DuesManagerScreen(userId: 1),
+              '/dues': (_) => Consumer<AuthProvider>(
+                builder: (context, auth, _) => DuesManagerScreen(
+                  userId: auth.userId ?? 1,
+                ),
+              ),
+              '/add-transaction': (_) => const AddTransactionScreen(),
             },
           );
         },

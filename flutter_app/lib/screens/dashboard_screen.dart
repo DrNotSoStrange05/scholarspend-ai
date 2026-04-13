@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/transaction_provider.dart';
+import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/survival_counter_card.dart';
 import '../widgets/spending_chart.dart';
@@ -16,38 +17,57 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // Hardcoded for demo; replace with auth-session user ID
-  static const int _userId = 1;
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = context.read<TransactionProvider>();
-      provider.loadData(_userId);
-      provider.startSmsListener(_userId);
+      final authProvider = context.read<AuthProvider>();
+      if (authProvider.userId != null) {
+        final provider = context.read<TransactionProvider>();
+        provider.loadData(authProvider.userId!);
+        provider.startSmsListener(authProvider.userId!);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
     final provider = context.watch<TransactionProvider>();
+
+    if (authProvider.userId == null) {
+      return const Scaffold(
+        body: Center(child: Text('Please login first')),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ScholarSpend AI'),
+        title: Text('👋 ${authProvider.userName ?? "Scholar"}'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Add Transaction',
+            onPressed: () => Navigator.pushNamed(context, '/add-transaction'),
+          ),
           IconButton(
             icon: const Icon(Icons.receipt_long_outlined),
             tooltip: 'Transaction Ledger',
             onPressed: () => Navigator.pushNamed(context, '/ledger'),
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: () {
+              context.read<AuthProvider>().logout();
+            },
           ),
         ],
       ),
       body: provider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: () => provider.loadData(_userId),
+              onRefresh: () => provider.loadData(authProvider.userId!),
               color: AppTheme.primary,
               child: ListView(
                 padding: const EdgeInsets.all(20),

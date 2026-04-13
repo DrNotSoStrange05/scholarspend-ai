@@ -6,7 +6,9 @@ import '../models/forecast.dart';
 import '../models/transaction.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://10.0.2.2/api'; // Android emulator → host
+  // For physical device: http://192.168.20.5:8000/api
+  // For emulator: http://10.0.2.2/api
+  static const String _baseUrl = 'http://192.168.20.5:8000/api';
 
   late final Dio _dio;
 
@@ -17,6 +19,23 @@ class ApiService {
       receiveTimeout: const Duration(seconds: 15),
       headers: {'Content-Type': 'application/json'},
     ));
+  }
+
+  // ── Users ────────────────────────────────────────────────────
+  Future<Map<String, dynamic>> createUser(String name, double initialBalance) async {
+    final response = await _dio.post(
+      '/users/',
+      data: {
+        'name': name,
+        'initial_balance': initialBalance,
+      },
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> getUser(int userId) async {
+    final response = await _dio.get('/users/$userId');
+    return response.data as Map<String, dynamic>;
   }
 
   // ── Transactions ─────────────────────────────────────────────

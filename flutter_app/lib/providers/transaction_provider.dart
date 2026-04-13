@@ -72,6 +72,20 @@ class TransactionProvider extends ChangeNotifier {
     }
   }
 
+  /// Add a manual transaction (not from SMS)
+  Future<void> addTransaction(int userId, Map<String, dynamic> payload) async {
+    _setLoading(true);
+    try {
+      await _api.createTransaction(userId, payload);
+      await loadData(userId);  // Refresh after adding
+    } catch (e) {
+      _error = e.toString();
+      _setLoading(false);
+      notifyListeners();
+      rethrow;
+    }
+  }
+
   // ═══════════════════════════════════════════════════════════════
   // SMS Listener (Android — Telephony plugin)
   // ═══════════════════════════════════════════════════════════════
