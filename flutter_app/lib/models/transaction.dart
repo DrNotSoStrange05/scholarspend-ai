@@ -7,7 +7,7 @@ class Transaction {
   final String? merchant;
   final String? description;
   final String? rawText;
-  final bool isSmsparsed;
+  final bool isSmsParsed;
   final String category;
   final String? referenceId;
   final String? bankName;
@@ -23,7 +23,7 @@ class Transaction {
     this.merchant,
     this.description,
     this.rawText,
-    required this.isSmsparse,
+    required this.isSmsParsed,
     required this.category,
     this.referenceId,
     this.bankName,
@@ -42,7 +42,7 @@ class Transaction {
         merchant: json['merchant'] as String?,
         description: json['description'] as String?,
         rawText: json['raw_text'] as String?,
-        isSmsparse: json['is_sms_parsed'] as bool? ?? false,
+        isSmsParsed: json['is_sms_parsed'] as bool? ?? false,
         category: json['category'] as String,
         referenceId: json['reference_id'] as String?,
         bankName: json['bank_name'] as String?,

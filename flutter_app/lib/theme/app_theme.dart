@@ -30,27 +30,29 @@ class AppTheme {
           surface: surface,
           error: danger,
         ),
-        textTheme: TextTheme(
-          displayLarge: const TextStyle(
-            fontSize: 56,
-            fontWeight: FontWeight.w800,
-            color: textPrimary,
-            letterSpacing: -1,
-          ),
-          headlineMedium: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-            color: textPrimary,
-          ),
-          bodyLarge: const TextStyle(fontSize: 16, color: textPrimary),
-          bodyMedium: const TextStyle(fontSize: 14, color: textSecondary),
-          labelSmall: const TextStyle(
-            fontSize: 11,
-            letterSpacing: 1.2,
-            color: textSecondary,
+        textTheme: GoogleFonts.interTextTheme(
+          const TextTheme(
+            displayLarge: TextStyle(
+              fontSize: 56,
+              fontWeight: FontWeight.w800,
+              color: textPrimary,
+              letterSpacing: -1,
+            ),
+            headlineMedium: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: textPrimary,
+            ),
+            bodyLarge: TextStyle(fontSize: 16, color: textPrimary),
+            bodyMedium: TextStyle(fontSize: 14, color: textSecondary),
+            labelSmall: TextStyle(
+              fontSize: 11,
+              letterSpacing: 1.2,
+              color: textSecondary,
+            ),
           ),
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           color: card,
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
