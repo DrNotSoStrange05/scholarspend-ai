@@ -269,7 +269,7 @@ class _DuesList extends StatelessWidget {
               );
             },
           );
-        }).toList(),
+        }),
       ],
     );
   }

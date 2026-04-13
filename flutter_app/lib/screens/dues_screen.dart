@@ -107,7 +107,7 @@ class _DuesScreenState extends State<DuesScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => _AddDueSheet(userId: _userId),
+      builder: (ctx) => const _AddDueSheet(userId: _userId),
     );
   }
 }
