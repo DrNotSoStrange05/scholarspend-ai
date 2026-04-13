@@ -1,0 +1,41 @@
+name: scholar_spend_ai
+description: ScholarSpend AI — Financial Stability Tool for Students
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  provider: ^6.1.2
+
+  # HTTP Client
+  dio: ^5.4.3
+
+  # Charts
+  fl_chart: ^0.68.0
+
+  # SMS Listener (Android native)
+  telephony: ^0.2.0
+
+  # Local storage
+  shared_preferences: ^2.2.3
+
+  # Date formatting
+  intl: ^0.19.0
+
+  # Icons
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
