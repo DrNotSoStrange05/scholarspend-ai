@@ -168,6 +168,22 @@ Once the Render settings are correct and you redeploy:
 
 ---
 
+## 🔄 Latest Fix Applied (April 13, 2026)
+
+**New Issue Discovered**: Native compilation errors for asyncpg and cryptography  
+**Root Cause**: Packages didn't have pre-built wheels for Python 3.14  
+**Solution**: Downgraded to older stable versions with guaranteed wheels
+
+**Changes Made**:
+- `asyncpg`: 0.27.0 → 0.26.0
+- `cryptography`: Downgraded to 3.4.8 (removed from python-jose extras)
+- `python-jose`: 3.3.0 (now pure Python, no C extensions)
+
+**Status**: ✅ All packages now have pre-built wheels
+**Next**: Redeploy and it should succeed!
+
+---
+
 **Next Action**: Go to Render Dashboard and follow the manual configuration steps above.
 
 **Timeline**: ~5 minutes to fix settings + 3 minutes to rebuild = 8 minutes total
