@@ -1,7 +1,7 @@
 # ─── Core Framework ──────────────────────────────────────────
 fastapi==0.95.2
 uvicorn==0.21.0
-python-multipart==0.0.5
+python-multipart==0.0.6
 
 # ─── Database ────────────────────────────────────────────────
 sqlalchemy==2.0.19
