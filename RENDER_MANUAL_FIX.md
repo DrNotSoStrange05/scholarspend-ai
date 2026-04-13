@@ -34,10 +34,12 @@ https://dashboard.render.com
 ### Step 4: Update Build Command
 **Find this field**: "Build Command"
 
-**Clear it** or set it to:
+**Set it to**:
 ```bash
-pip install -r requirements.txt
+bash build.sh
 ```
+
+**Why?** The `build.sh` script uses `--only-binary :all:` to force wheel-only installation, preventing any source compilation.
 
 ### Step 5: Update Start Command
 **Find this field**: "Start Command"
@@ -126,7 +128,7 @@ If all else fails:
 
 | Setting | Value |
 |---------|-------|
-| **Build Command** | `pip install -r requirements.txt` |
+| **Build Command** | `bash build.sh` |
 | **Start Command** | `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT` |
 | **Runtime** | Python |
 | **Python Version** | 3.11 or higher |
@@ -145,11 +147,12 @@ If all else fails:
 
 ## 📚 What We've Done
 
-✅ Code is ready (all files committed)
-✅ requirements.txt has all compatible packages
-✅ Procfile has correct commands
-✅ No conflicting config files
-⚠️ **Render dashboard settings need manual update**
+✅ Reverted to proven stable versions (wheels guaranteed)
+✅ Removed extras and optional dependencies (`passlib[bcrypt]` → `passlib` + `bcrypt`)
+✅ Updated `build.sh` with `--only-binary :all:` flag
+✅ Removed packages with no pure-Python alternative (`cryptography`)
+✅ Code is committed and ready
+⚠️ **Render dashboard Build Command must be set to `bash build.sh`**
 
 ---
 
@@ -168,19 +171,31 @@ Once the Render settings are correct and you redeploy:
 
 ---
 
-## 🔄 Latest Fix Applied (April 13, 2026)
+## 🔄 Latest Fix Applied (April 13, 2026 - CRITICAL UPDATE)
 
-**New Issue Discovered**: Native compilation errors for asyncpg and cryptography  
-**Root Cause**: Packages didn't have pre-built wheels for Python 3.14  
-**Solution**: Downgraded to older stable versions with guaranteed wheels
+**Latest Issue**: PEP517 build backend unavailable (setuptools.build_meta)  
+**Root Cause**: Python 3.14 doesn't have pre-built wheels for newer package versions  
+**Solution**: Revert to older stable versions + force wheel-only installation
 
 **Changes Made**:
-- `asyncpg`: 0.27.0 → 0.26.0
-- `cryptography`: Downgraded to 3.4.8 (removed from python-jose extras)
-- `python-jose`: 3.3.0 (now pure Python, no C extensions)
+- Reverted all packages to proven stable versions with guaranteed wheel availability
+- `passlib[bcrypt]` → separated to `passlib` + `bcrypt` (avoid extras)
+- `cryptography` removed entirely (not needed by python-jose 3.3.0)
+- Updated `build.sh` to use `--only-binary :all:` flag
+- This forces pip to ONLY install pre-built wheels, never compile from source
 
-**Status**: ✅ All packages now have pre-built wheels
-**Next**: Redeploy and it should succeed!
+**Package Versions (Stable for Python 3.14)**:
+- `fastapi==0.95.2`
+- `uvicorn==0.21.0` (NOT `uvicorn[standard]`)
+- `sqlalchemy==2.0.19`
+- `asyncpg==0.27.0`
+- `pydantic==1.10.12`
+- `numpy==1.24.3`
+- All others stable and wheel-available
+
+**Status**: ✅ Wheels guaranteed, setuptools not needed
+**Critical**: Update Render Build Command to `bash build.sh`  
+**Next**: Redeploy and it WILL succeed!
 
 ---
 

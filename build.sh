@@ -2,8 +2,7 @@
 set -e
 
 echo "==> ScholarSpend AI - Build Script"
-echo "==> Installing dependencies with pip..."
-pip install --upgrade pip
-pip install -r requirements.txt
+echo "==> Installing dependencies (wheels only, no compilation)..."
+pip install --no-cache-dir --only-binary :all: -r requirements.txt
 
 echo "==> Build complete!"
