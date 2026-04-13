@@ -1,26 +1,26 @@
 # ─── Core Framework ──────────────────────────────────────────
-fastapi==0.95.2          # Stable, no native deps
-uvicorn[standard]==0.21.0  # Compatible with fastapi 0.95
-python-multipart==0.0.5
+fastapi==0.104.1         # Latest with pre-built wheels
+uvicorn[standard]==0.24.0  # Latest compatible
+python-multipart==0.0.6
 
 # ─── Database ────────────────────────────────────────────────
-sqlalchemy==2.0.19       # Stable, compatible
-asyncpg==0.26.0          # Older stable version with pre-built wheels
-alembic==1.11.3          # Compatible version
+sqlalchemy==2.0.23       # Latest stable
+asyncpg==0.29.0          # Latest with wheels
+alembic==1.12.1          # Latest stable
 
 # ─── Validation ──────────────────────────────────────────────
-pydantic==1.10.12        # v1 has pre-built wheels everywhere
-pydantic-settings==2.0.3
+pydantic==2.5.0          # Latest with wheels
+pydantic-settings==2.1.0
 
 # ─── Auth ────────────────────────────────────────────────────
 passlib[bcrypt]==1.7.4
-python-jose==3.3.0       # Don't use cryptography extras - use pure python
-cryptography==3.4.8      # Older stable version with wheels
+python-jose==3.3.0       # Pure python
+cryptography==41.0.7     # Latest with wheels
 
 # ─── Analytics / Forecasting ────────────────────────────────
-numpy==1.24.3            # Pre-built wheels available
+numpy==1.26.2            # Latest with wheels
 
 # ─── Dev / Testing ───────────────────────────────────────────
-httpx==0.24.0
-pytest==7.4.0
-pytest-asyncio==0.21.1
+httpx==0.25.2
+pytest==7.4.3
+pytest-asyncio==0.23.0
