@@ -41,180 +41,235 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 40),
-                    // Logo/Title
-                    const Text(
-                      '💸 ScholarSpend AI',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+            child: Column(
+              children: [
+                // Scrollable content area
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        24,
+                        MediaQuery.of(context).padding.top + 40,
+                        24,
+                        24,
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Know how many days your money will last',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    const SizedBox(height: 48),
-
-                    // Form
-                    Form(
-                      key: _formKey,
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (_isRegisterMode) ...[
-                            // Register: Name field
-                            TextFormField(
-                              controller: _nameController,
-                              decoration: InputDecoration(
-                                hintText: 'Your Name',
-                                prefixIcon: const Icon(Icons.person),
-                                filled: true,
-                                fillColor: Colors.white10,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'Name required' : null,
+                          // Logo/Title
+                          const Text(
+                            '💸 ScholarSpend AI',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                            const SizedBox(height: 16),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'Know how many days your money will last',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white70,
+                            ),
+                          ),
+                          const SizedBox(height: 48),
 
-                            // Register: Initial Balance
-                            TextFormField(
-                              controller: _initialBalanceController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                hintText: 'Initial Balance (₹)',
-                                prefixIcon: const Icon(Icons.currency_rupee),
-                                filled: true,
-                                fillColor: Colors.white10,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                              validator: (v) {
-                                if (v?.isEmpty ?? true) return 'Balance required';
-                                if (double.tryParse(v!) == null) {
-                                  return 'Invalid amount';
-                                }
-                                return null;
-                              },
+                          // Form
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                if (_isRegisterMode) ...[
+                                  // Register: Name field
+                                  TextFormField(
+                                    controller: _nameController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Your Name',
+                                      prefixIcon: const Icon(Icons.person),
+                                      filled: true,
+                                      fillColor: Colors.white10,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      hintStyle:
+                                          const TextStyle(color: Colors.white60),
+                                    ),
+                                    style: const TextStyle(color: Colors.white),
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true ? 'Name required' : null,
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Register: Initial Balance
+                                  TextFormField(
+                                    controller: _initialBalanceController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      hintText: 'Initial Balance (₹)',
+                                      prefixIcon:
+                                          const Icon(Icons.currency_rupee),
+                                      filled: true,
+                                      fillColor: Colors.white10,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      hintStyle:
+                                          const TextStyle(color: Colors.white60),
+                                    ),
+                                    style: const TextStyle(color: Colors.white),
+                                    validator: (v) {
+                                      if (v?.isEmpty ?? true) {
+                                        return 'Balance required';
+                                      }
+                                      if (double.tryParse(v!) == null) {
+                                        return 'Invalid amount';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ] else ...[
+                                  // Login: User ID field
+                                  TextFormField(
+                                    controller: _userIdController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      hintText: 'User ID',
+                                      prefixIcon: const Icon(Icons.badge),
+                                      filled: true,
+                                      fillColor: Colors.white10,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      hintStyle:
+                                          const TextStyle(color: Colors.white60),
+                                    ),
+                                    style: const TextStyle(color: Colors.white),
+                                    validator: (v) =>
+                                        v?.isEmpty ?? true
+                                            ? 'User ID required'
+                                            : null,
+                                  ),
+                                ],
+                              ],
                             ),
-                          ] else ...[
-                            // Login: User ID field
-                            TextFormField(
-                              controller: _userIdController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                hintText: 'User ID',
-                                prefixIcon: const Icon(Icons.badge),
-                                filled: true,
-                                fillColor: Colors.white10,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Submit Button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: authProvider.isLoading
+                                  ? null
+                                  : () => _handleSubmit(authProvider),
+                              icon: authProvider.isLoading
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                            Colors.white),
+                                      ),
+                                    )
+                                  : Icon(_isRegisterMode
+                                      ? Icons.app_registration
+                                      : Icons.login),
+                              label: Text(
+                                _isRegisterMode ? 'Create Account' : 'Login',
+                                style: const TextStyle(fontSize: 16),
                               ),
-                              validator: (v) =>
-                                  v?.isEmpty ?? true ? 'User ID required' : null,
+                              style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                backgroundColor: Colors.blue.shade400,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ),
+
+                          if (authProvider.error != null) ...[
+                            const SizedBox(height: 16),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.red.shade900,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    '⚠️ Connection Error',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    authProvider.error!,
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    '💡 Make sure the backend is running at localhost:8000',
+                                    style: TextStyle(
+                                      color: Colors.yellow,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
+
+                          const SizedBox(height: 24),
+
+                          // Toggle mode
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                _isRegisterMode
+                                    ? 'Already have an account? '
+                                    : 'Don\'t have an account? ',
+                                style:
+                                    const TextStyle(color: Colors.white70),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isRegisterMode = !_isRegisterMode;
+                                    _formKey.currentState?.reset();
+                                  });
+                                },
+                                child: Text(
+                                  _isRegisterMode ? 'Login' : 'Register',
+                                  style: TextStyle(
+                                    color: Colors.blue.shade200,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
-
-                    const SizedBox(height: 24),
-
-                    // Submit Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: authProvider.isLoading
-                            ? null
-                            : () => _handleSubmit(authProvider),
-                        icon: authProvider.isLoading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(Colors.white),
-                                ),
-                              )
-                            : Icon(_isRegisterMode ? Icons.app_registration : Icons.login),
-                        label: Text(
-                          _isRegisterMode ? 'Create Account' : 'Login',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          backgroundColor: Colors.blue.shade400,
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ),
-
-                    if (authProvider.error != null) ...[
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade900,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'Error: ${authProvider.error}',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-
-                    const SizedBox(height: 24),
-
-                    // Toggle mode
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _isRegisterMode
-                              ? 'Already have an account? '
-                              : 'Don\'t have an account? ',
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _isRegisterMode = !_isRegisterMode;
-                              _formKey.currentState?.reset();
-                            });
-                          },
-                          child: Text(
-                            _isRegisterMode ? 'Login' : 'Register',
-                            style: TextStyle(
-                              color: Colors.blue.shade200,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           );
         },
@@ -236,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     if (success && mounted) {
-      Navigator.of(context).pushReplacementNamed('/');
+      Navigator.of(context).pushReplacementNamed('/dashboard');
     }
   }
 }
