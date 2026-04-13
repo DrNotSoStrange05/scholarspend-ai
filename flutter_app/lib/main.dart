@@ -12,6 +12,7 @@ import 'screens/analytics_screen.dart';
 import 'screens/dues_manager_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/add_transaction_screen.dart';
+import 'screens/stats_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -58,6 +59,7 @@ class _ScholarSpendAppState extends State<ScholarSpendApp> {
               '/dashboard': (_) => const DashboardScreen(),
               '/ledger': (_) => const LedgerScreen(),
               '/analytics': (_) => const AnalyticsScreen(),
+              '/stats': (_) => const StatsScreen(),
               '/dues': (_) => Consumer<AuthProvider>(
                 builder: (context, auth, _) => DuesManagerScreen(
                   userId: auth.userId ?? 1,

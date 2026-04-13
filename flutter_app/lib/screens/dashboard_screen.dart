@@ -56,6 +56,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () => Navigator.pushNamed(context, '/ledger'),
           ),
           IconButton(
+            icon: const Icon(Icons.bar_chart),
+            tooltip: 'Financial Stats',
+            onPressed: () => Navigator.pushNamed(context, '/stats'),
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',
             onPressed: () {
