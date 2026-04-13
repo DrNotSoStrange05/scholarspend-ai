@@ -5,9 +5,17 @@ description = "Financial stability tool for students"
 requires-python = ">=3.12"
 
 [tool.poetry.dependencies]
-python = "^3.12"
-fastapi = "0.111.0"
-uvicorn = {extras = ["standard"], version = "0.29.0"}
-sqlalchemy = "2.0.30"
-asyncpg = "0.29.0"
-pydantic = {extras = ["email"], version = "2.7.1"}
+python = "^3.11"
+fastapi = "0.95.2"
+uvicorn = {extras = ["standard"], version = "0.21.0"}
+sqlalchemy = "2.0.19"
+asyncpg = "0.27.0"
+pydantic = "1.10.12"
+python-multipart = "0.0.5"
+alembic = "1.11.3"
+passlib = {extras = ["bcrypt"], version = "1.7.4"}
+python-jose = {extras = ["cryptography"], version = "3.3.0"}
+numpy = "1.24.3"
+httpx = "0.24.0"
+pytest = "7.4.0"
+pytest-asyncio = "0.21.1"
