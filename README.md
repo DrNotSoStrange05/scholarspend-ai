@@ -101,6 +101,68 @@ flutter run
 
 ---
 
+## 🚀 Deployment
+
+### Local Development
+```bash
+docker-compose up --build
+# Backend: http://localhost/api
+# Swagger: http://localhost/docs
+```
+
+### Cloud Deployment (Recommended for Mobile)
+
+The backend is ready for cloud deployment! Choose your platform:
+
+#### **Railway** (Recommended - 5 min setup)
+1. Sign up at https://railway.app/ with GitHub
+2. Create new project → Deploy from repo → Select `scholarspend-ai`
+3. Railway adds PostgreSQL automatically
+4. Get your public URL and update Flutter app
+
+**See**: [`RAILWAY_SETUP.md`](./RAILWAY_SETUP.md) for step-by-step guide
+
+#### **Render** (Alternative)
+1. Sign up at https://render.com/ with GitHub
+2. Create Web Service → Select repo → Configure with Dockerfile
+3. Add PostgreSQL database
+4. Deploy and get public URL
+
+**See**: [`DEPLOYMENT.md`](./DEPLOYMENT.md) for all options
+
+### Update Flutter App After Deployment
+
+Edit `flutter_app/lib/services/api_service.dart`:
+```dart
+class ApiService {
+  // Replace with your deployed URL
+  static const String _baseUrl = 'https://your-deployed-url.app/api';
+}
+```
+
+Then rebuild:
+```bash
+cd flutter_app
+flutter pub get
+flutter build apk --release
+```
+
+---
+
+## 📋 Deployment Checklist
+
+- [ ] Backend deployed to Railway/Render
+- [ ] PostgreSQL database created
+- [ ] API health check passes: `https://your-url/health`
+- [ ] Flutter app updated with new backend URL
+- [ ] All features tested on mobile device
+  - [ ] User registration/login
+  - [ ] Transaction creation
+  - [ ] Analytics/stats display
+  - [ ] Dues management
+
+---
+
 ## Built for Hackathon 🏆
 
 ScholarSpend AI was built as a hackathon project to help students avoid the classic "broke before month end" problem by making financial data actionable and visible.
