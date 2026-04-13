@@ -19,7 +19,7 @@ python-jose==3.3.0
 bcrypt==4.0.1
 
 # ─── Analytics / Forecasting ────────────────────────────────
-numpy==1.24.3
+numpy==2.4.4
 
 # ─── Dev / Testing ───────────────────────────────────────────
 httpx==0.24.0
