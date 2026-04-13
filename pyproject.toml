@@ -2,7 +2,7 @@
 name = "scholarspend-ai"
 version = "1.0.0"
 description = "Financial stability tool for students"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 
 [tool.poetry.dependencies]
 python = "^3.11"
