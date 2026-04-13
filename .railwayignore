@@ -1,0 +1,21 @@
+# Railway will only look at Python files at root level
+# Backend code is in backend/ folder
+.git
+.gitignore
+flutter_app/
+nginx/
+*.md
+*.txt
+.env
+__pycache__
+*.pyc
+.pytest_cache
+.coverage
+.vscode
+.idea
+*.db
+.DS_Store
+node_modules
+.dockerignore
+Dockerfile
+docker-compose.yml
