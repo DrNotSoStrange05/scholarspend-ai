@@ -11,10 +11,12 @@ from app.models import Base
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://scholar:scholar@localhost:5432/scholarspend",
+    "sqlite+aiosqlite:///./scholarspend_dev.db",   # dev default (no Postgres needed)
+    # Production: postgresql+asyncpg://scholar:scholar@db:5432/scholarspend
 )
 
-engine = create_async_engine(DATABASE_URL, echo=False, future=True)
+_connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_async_engine(DATABASE_URL, echo=True, future=True, connect_args=_connect_args)
 
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
