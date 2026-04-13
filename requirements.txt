@@ -5,16 +5,17 @@ python-multipart==0.0.5
 
 # ─── Database ────────────────────────────────────────────────
 sqlalchemy==2.0.19       # Stable, compatible
-asyncpg==0.27.0          # Stable pre-built wheels
+asyncpg==0.26.0          # Older stable version with pre-built wheels
 alembic==1.11.3          # Compatible version
 
 # ─── Validation ──────────────────────────────────────────────
-pydantic==1.10.12        # v1 has pre-built wheels everywhere, no pydantic-core compilation
+pydantic==1.10.12        # v1 has pre-built wheels everywhere
 pydantic-settings==2.0.3
 
 # ─── Auth ────────────────────────────────────────────────────
 passlib[bcrypt]==1.7.4
-python-jose[cryptography]==3.3.0
+python-jose==3.3.0       # Don't use cryptography extras - use pure python
+cryptography==3.4.8      # Older stable version with wheels
 
 # ─── Analytics / Forecasting ────────────────────────────────
 numpy==1.24.3            # Pre-built wheels available
